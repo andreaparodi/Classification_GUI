@@ -17,6 +17,21 @@ namespace Classification_GUI
             Red = 0
         }
 
+        public enum classifiers
+        {
+            KNN = 1,
+            NeuralNetwork = 2,
+            SVN = 3
+        }
+        //public List<int> classifiersList = new List<int>
+
+        public static int selectedClassifier = 0;
+        public static int SelectedClassifier
+        {
+            get { return selectedClassifier; }
+            set { selectedClassifier = value; }
+        }
+
         public static string datasetFilePath = "";
         public static string DatasetFilePath
         {
