@@ -21,6 +21,14 @@ namespace Classification_GUI
         private void button1_Click(object sender, EventArgs e)
         {
             readData(GlobalVariables.datasetFilePath);
+            ImageForm imageForm = new ImageForm();
+            Image backGroundImage;
+            //TODO: mettere il file immagine di sfondo nel progetto invece di caricarla da percorso, per ora più comodo tenere così
+
+            backGroundImage = imageForm.createImageForm(@"C:\Users\andre\Documents\asset vari\spruz501.png");
+
+            //drawSomething(backGroundImage);
+            int stop = 0;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -58,15 +66,13 @@ namespace Classification_GUI
             else
             {
                 //valido il percorso file e lancio messagebox di errore in cui percorso vuoto o file non apribile
-                string errorMessage = "";
+                //string errorMessage = "";
                 string[] fileContent;
                 if (GlobalVariables.datasetFilePath != null)
                 {
                     try
                     {
                         fileContent = File.ReadAllLines(path);
-                        //TODO: mettere il file immagine di sfondo nel progetto invece di caricarla da percorso, per ora più comodo tenere così
-                        createImageForm(@"C:\Users\andre\Documents\asset vari\trans.png");
                     }
                     catch (Exception e)
 
@@ -86,24 +92,29 @@ namespace Classification_GUI
             }
         }
 
-        void createImageForm(string path)
+
+        void drawSomething(Image i)
         {
-            ImageForm imageForm = new ImageForm();
+            Graphics g = Graphics.FromImage(i);
 
-            PictureBox guiBackground = new PictureBox();
-            guiBackground.Dock = DockStyle.Fill;
-            guiBackground.Image = Image.FromFile(path);
-            //guiBackground.Image = Image.FromFile(@"C:\Users\andre\Documents\asset vari\sfondo_gui_png.png");
+            g.DrawEllipse(Pens.DarkBlue, new Rectangle(50, 25, 1, 1));
 
-            //guiBackground.SizeMode = PictureBoxSizeMode.StretchImage;
+            g.DrawImage(i, new Point(0, 0));
+        }
 
-            //rendo il form della stessa grandezza dell'immagine senza stare a scriverlo su globals
-            imageForm.Size = guiBackground.Image.Size;
-            //e lo rendo non stretchabile
-            imageForm.FormBorderStyle = FormBorderStyle.FixedDialog;
-            imageForm.Controls.Add(guiBackground);
+        public void DrawLineInt(Bitmap bmp)
+        {
+            Pen blackPen = new Pen(Color.Black, 3);
 
-            imageForm.ShowDialog();
+            int x1 = 100;
+            int y1 = 100;
+            int x2 = 500;
+            int y2 = 100;
+            // Draw line to screen.
+            using (var graphics = Graphics.FromImage(bmp))
+            {
+                graphics.DrawLine(blackPen, x1, y1, x2, y2);
+            }
         }
         #endregion
 

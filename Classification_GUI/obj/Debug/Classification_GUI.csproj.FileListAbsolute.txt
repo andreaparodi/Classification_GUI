@@ -8,3 +8,4 @@ C:\Users\andre\Documents\Visual Studio 2017\Projects\Classification_GUI\Classifi
 C:\Users\andre\Documents\Visual Studio 2017\Projects\Classification_GUI\Classification_GUI\obj\Debug\Classification_GUI.exe
 C:\Users\andre\Documents\Visual Studio 2017\Projects\Classification_GUI\Classification_GUI\obj\Debug\Classification_GUI.pdb
 C:\Users\andre\Documents\Visual Studio 2017\Projects\Classification_GUI\Classification_GUI\obj\Debug\Classification_GUI.GuiForm.resources
+C:\Users\andre\Documents\Visual Studio 2017\Projects\Classification_GUI\Classification_GUI\obj\Debug\Classification_GUI.ImageForm.resources
