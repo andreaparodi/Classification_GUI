@@ -8,8 +8,8 @@ namespace Classification_GUI
 {
     class Dataset
     {
-        List<ClassifiedDatapoints> classified_data;
-        List<Datapoints> unclassified_data;
+        public List<ClassifiedDatapoint> classified_data;
+        public List<UnclassifiedDatapoint> unclassified_data;
 
         public Dataset()
         {

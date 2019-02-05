@@ -15,7 +15,7 @@ namespace Classification_GUI
 
         }
 
-        public void draw_dataset(List<ClassifiedDatapoints> datapoints)
+        public void drawTrainingSet(List<ClassifiedDatapoint> datapoints)
         {
             foreach (var point in datapoints)
             {

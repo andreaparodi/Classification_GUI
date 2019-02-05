@@ -38,5 +38,32 @@ namespace Classification_GUI
             get { return datasetFilePath; }
             set { datasetFilePath = value; }
         }
+
+        #region classifiers parameters
+
+        //kNN
+        public enum distanceMode
+        {
+            Euclidean = 1,
+            Approx = 2
+        }
+        public static int voteModeValue;
+        public static int VoteModeValue
+        {
+            get { return voteModeValue; }
+            set { voteModeValue = value; }
+        }
+
+        public enum voteMode
+        {
+            Majority = 1,
+            Weighted = 2
+        }
+        //NN
+
+        //pseudoSVN
+
+
+        #endregion classifiers parameters
     }
 }

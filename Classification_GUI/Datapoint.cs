@@ -6,36 +6,36 @@ using System.Threading.Tasks;
 
 namespace Classification_GUI
 {
-    class ClassifiedDatapoints
+    class ClassifiedDatapoint
     {
         public double x;
         public double y;
         public int label;
 
-        public ClassifiedDatapoints()
+        public ClassifiedDatapoint()
         {
             x = 0;
             y = 0;
             label = 10;
         }
-        public ClassifiedDatapoints(double x_val, double y_val, int label_val)
+        public ClassifiedDatapoint(double x_val, double y_val, int label_val)
         {
             x = x_val;
             y = y_val;
             label = label_val;
         }
     }
-    class Datapoints
+    class UnclassifiedDatapoint
     {
         public double x;
         public double y;
         
-        public Datapoints()
+        public UnclassifiedDatapoint()
         {
             x = 0;
             y = 0;
             }
-        public Datapoints(double x_val, double y_val, int label_val)
+        public UnclassifiedDatapoint(double x_val, double y_val, int label_val)
         {
             x = x_val;
             y = y_val;
