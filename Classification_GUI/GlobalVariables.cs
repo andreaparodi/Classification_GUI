@@ -41,6 +41,12 @@ namespace Classification_GUI
 
         #region classifiers parameters
 
+        //TODO: enum per le etichette? in mdoo che se volessi cambiarle globalmente per qualche motivo le cambio qua invece di assegnarle puntualmente in tutte le assegnazioni
+        public enum labelsStandardValue
+        {
+            pos = 1,
+            neg = 0
+        }
         //kNN
         public enum distanceMode
         {
@@ -59,11 +65,18 @@ namespace Classification_GUI
             Majority = 1,
             Weighted = 2
         }
-        //NN
 
-        //pseudoSVN
+        public static int kValue;
+        public static int KValue
+        {
+            get { return kValue; }
+            set { kValue = value; }
+        }
+            //NN
+
+            //pseudoSVN
 
 
-        #endregion classifiers parameters
+            #endregion classifiers parameters
+        }
     }
-}

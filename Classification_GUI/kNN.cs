@@ -28,11 +28,14 @@ namespace Classification_GUI
             int label = 0;
             //giusto per comodità
             int datasetSize = dataset.classified_data.Count();
+            //serve per contenere le distanze che utilizzo in fase di voto
             double[] distances = new double[datasetSize];
+            //serve in fase di voto (per semplificazione) per avere i primi k indici salvati e non dover passare anche la madonna alle funzioni di voto
+            int[] classifiedLabels = new int[GlobalVariables.kValue];
 
             for (int i = 0; i < datasetSize; i++)
             {
-                distances[i] = calculateDistance(dataset, datapoint);
+                distances[i] = calculateDistance(dataset.classified_data[i], datapoint);
             }
             //ora ordino in maniera crescente distanze e punti 
             for (int i = 0; i < datasetSize; i++)
@@ -53,28 +56,10 @@ namespace Classification_GUI
 
             }
             //TODO una volta ottenute le distanze e i punti ordinati trovo l'etichetta 
-
-
-
-
-             /*
-             for (int i = 0; i <nOfSamples; i++)
-	{
-		for (int j = 0; j < nOfSamples; j++)
-		{
-			if (distances[j] > distances[i])
-			{
-				float tmp = distances[i];
-				distances[i] = distances[j];
-				distances[j] = tmp;
-
-				int tmpIndex = index[i];
-				index[i] = index[j];
-				index[j] = tmpIndex;
-			}
-		}
-}
-             */
+            for (int i = 0; i < GlobalVariables.kValue; i++)
+            {
+                classifiedLabels[i] = dataset.classified_data[i].label;
+            }
             return label;
         }
 
@@ -94,7 +79,8 @@ namespace Classification_GUI
         }
 
         //mode può essere euclidea o approssimata
-        public double calculateDistance(Dataset dataset, UnclassifiedDatapoint point)
+        //--TODO: non riceve un "dataset" ma un punto classificato
+        public double calculateDistance(ClassifiedDatapoint classifiedPoint, UnclassifiedDatapoint unclassifiedPoint)
         {
             double dist=-1;
 
@@ -102,11 +88,12 @@ namespace Classification_GUI
               {
                 case (int)GlobalVariables.distanceMode.Euclidean:
                     {
-                        
+                        dist = euclideanDistance(unclassifiedPoint, classifiedPoint);
                         break;
                     }
                 case (int)GlobalVariables.distanceMode.Approx:
                     {
+                        dist = approxDistance(unclassifiedPoint, classifiedPoint);
                         break;
                     }
                 default:
@@ -117,15 +104,52 @@ namespace Classification_GUI
         return dist;
         }
         
-
         public double euclideanDistance(UnclassifiedDatapoint UCpoint, ClassifiedDatapoint CLpoint)
         {
             return Math.Sqrt( Math.Pow((UCpoint.x-CLpoint.x),2) + Math.Pow((UCpoint.y-CLpoint.y),2) );
         }
+        //TODO: è cosi cioè |d1|+|d2| oppure |d1 + d2| oppure |d1 - d2|
         public double approxDistance(UnclassifiedDatapoint UCpoint, ClassifiedDatapoint CLpoint)
         {
             return (Math.Abs(UCpoint.x - CLpoint.x) + Math.Abs(UCpoint.y - CLpoint.y));
         }
-        
+        public int findLabel(double[] dist, int[] knownLabels)
+        {
+            int label = 0;
+            float temp = 0;
+            switch (GlobalVariables.voteModeValue)
+            {
+                case (int)GlobalVariables.voteMode.Majority:
+                    {
+                        for (int i = 0; i < GlobalVariables.kValue; i++)
+                        {
+                            temp += knownLabels[i];
+                        }
+                        if (temp > Math.Floor(temp / 2))
+                            temp = (float)GlobalVariables.labelsStandardValue.pos;
+                        else
+                            temp = (float)GlobalVariables.labelsStandardValue.neg;
+                        break;
+                    }
+                case (int)GlobalVariables.voteMode.Weighted:
+                    {
+                        break;
+                    }
+                default:
+                    {
+                        throw new Exception("Non definito il modo in cui viene stabilita l'etichetta");
+                    }
+            }
+        return label;
+        }
+
+        double voteWeight(double distance)
+        {
+            double w = 0;
+
+            w=1/(1+distance);
+
+            return w;
+        }
     }
 }
