@@ -6,39 +6,34 @@ using System.Threading.Tasks;
 
 namespace Classification_GUI
 {
+    //convertire da x, y a lista perchè altrimenti non si gestiscono più di 2 features
     class ClassifiedDatapoint
     {
-        public double x;
-        public double y;
+        public List<double> attributes;
         public int label;
 
         public ClassifiedDatapoint()
         {
-            x = 0;
-            y = 0;
+            attributes = new List<double>();
             label = 10;
         }
-        public ClassifiedDatapoint(double x_val, double y_val, int label_val)
+        public ClassifiedDatapoint(List<double> atr, int label_val)
         {
-            x = x_val;
-            y = y_val;
+            attributes = atr;
             label = label_val;
         }
     }
     class UnclassifiedDatapoint
     {
-        public double x;
-        public double y;
-        
+        public List<double> attributes;
+
         public UnclassifiedDatapoint()
         {
-            x = 0;
-            y = 0;
-            }
-        public UnclassifiedDatapoint(double x_val, double y_val, int label_val)
+            attributes = new List<double>();
+        }
+        public UnclassifiedDatapoint(List<double> atr)
         {
-            x = x_val;
-            y = y_val;
+            attributes = atr;
         }
     }
 

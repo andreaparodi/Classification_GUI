@@ -20,7 +20,7 @@ namespace Classification_GUI
 
         private void button1_Click(object sender, EventArgs e)
         {
-            readData(GlobalVariables.datasetFilePath);
+            Dataset dataset = readData(GlobalVariables.datasetFilePath);
             ImageForm imageForm = new ImageForm();
             Image backGroundImage;
             //TODO: mettere il file immagine di sfondo nel progetto invece di caricarla da percorso, per ora più comodo tenere così
@@ -56,8 +56,10 @@ namespace Classification_GUI
         #region funzioni varie
 
         //lettura dati da file attraverso finestra di dialogo
-        void readData(string path)
+        // valutare spostamento in Dataset.cs
+        Dataset readData(string path)
         {
+            Dataset dataset = new Dataset();
             //controllo che ci sia un classificatore selezionato
             if (GlobalVariables.selectedClassifier == 0)
             {
@@ -73,6 +75,62 @@ namespace Classification_GUI
                     try
                     {
                         fileContent = File.ReadAllLines(path);
+                        //TODO lettura e gestione dataset
+
+                        //per capire se è già classificato posso contare i ; nella riga, però dovrebbe essere dinamico per poter gestire 
+                        //i casi in cui non so il num features e ipotizzando che non so se la prima riga è classified o meno
+                        //memo: num features = max numero ; +1
+                        bool exit = true;
+                        int index = 0;
+                        //int numFeatures = 0;
+                        do
+                        {
+                            string[] buffer = fileContent[index].Split(';');
+                            if (buffer.Length > GlobalVariables.datasetFeatures)
+                            { 
+                                GlobalVariables.datasetFeatures = buffer.Length;
+                                //se becco una riga più lunga e non parto da zero vuol dire che ho trovato una riga classificata dopo averne lette tot da classificare
+                                if (index != 0)
+                                {
+                                    exit = false;
+                                }
+                            }
+                            //qua esco sicuro perchè ho beccato una riga con meno valori (senza etichetta)
+                            else if (buffer.Length < GlobalVariables.datasetFeatures)
+                            {
+                                exit = false;
+                            }
+                            index++;
+                        }
+                        while (exit);
+
+                        foreach (var line in fileContent)
+                        {
+                            string[] buffer = line.Split(';');
+                            ClassifiedDatapoint cdp = new ClassifiedDatapoint();
+                            UnclassifiedDatapoint ucdp = new UnclassifiedDatapoint();
+                            //è un punto con etichetta
+                            if (buffer.Length == GlobalVariables.datasetFeatures)
+                            {
+                                for (int i = 0; i < GlobalVariables.datasetFeatures-1; i++)
+                                {
+                                    cdp.attributes.Add(Convert.ToDouble(buffer[i]));
+                                }
+                                cdp.label = Convert.ToInt32(buffer[GlobalVariables.datasetFeatures - 1]);
+                                dataset.classified_data.Add(cdp);
+                            }
+                            //altrimenti no
+                            else
+                            {
+                                for (int i = 0; i < GlobalVariables.datasetFeatures - 1; i++)
+                                {
+                                    ucdp.attributes.Add(Convert.ToDouble(buffer[i]));
+                                }
+                                dataset.unclassified_data.Add(ucdp);
+                            }
+                        }
+
+                        int stop = 9;
                     }
                     catch (Exception e)
 
@@ -90,6 +148,7 @@ namespace Classification_GUI
                 //finiti i controlli apro finestra dove voglio plottare i punti
                 // createImageForm(@"C:\Users\andre\Documents\asset vari\trans.png");
             }
+            return dataset;
         }
 
 
@@ -101,7 +160,7 @@ namespace Classification_GUI
 
             g.DrawImage(i, new Point(0, 0));
         }
-
+        /*
         public void DrawLineInt(Bitmap bmp)
         {
             Pen blackPen = new Pen(Color.Black, 3);
@@ -115,7 +174,8 @@ namespace Classification_GUI
             {
                 graphics.DrawLine(blackPen, x1, y1, x2, y2);
             }
-        }
+        }*/
+
         #endregion
 
         //knn
