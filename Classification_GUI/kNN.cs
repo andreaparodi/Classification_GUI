@@ -9,8 +9,8 @@ namespace Classification_GUI
     class kNN
     {
         //variabili abbastanza inutili in quanto carica tutti i parametri da globalvalues
-        int mode;
-        int k;
+        public int mode;
+        public int k;
 
         public kNN()
         {
@@ -104,7 +104,7 @@ namespace Classification_GUI
         {
             double res = 0;
             //double temp = 0;
-            for (int i = 0; i < GlobalVariables.datasetFeatures; i++)
+            for (int i = 0; i < GlobalVariables.inputFeatures; i++)
             {
                 res = res + Math.Pow((UCpoint.attributes[i] - CLpoint.attributes[i]), 2);
                 //temp = temp+ Math.Pow((UCpoint.attributes[i] - CLpoint.attributes[i]), 2);
@@ -117,7 +117,7 @@ namespace Classification_GUI
         {
             double res = 0;
             // (Math.Abs(UCpoint.x - CLpoint.x) + Math.Abs(UCpoint.y - CLpoint.y));
-            for (int i = 0; i < GlobalVariables.datasetFeatures; i++)
+            for (int i = 0; i < GlobalVariables.inputFeatures; i++)
             {
                 res = res + Math.Abs(UCpoint.attributes[i] - CLpoint.attributes[i]);
             }

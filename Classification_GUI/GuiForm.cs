@@ -21,11 +21,25 @@ namespace Classification_GUI
         private void button1_Click(object sender, EventArgs e)
         {
             Dataset dataset = readData(GlobalVariables.datasetFilePath);
+            extractNormalizationFactors(dataset);
+
             ImageForm imageForm = new ImageForm();
             Image backGroundImage;
             //TODO: mettere il file immagine di sfondo nel progetto invece di caricarla da percorso, per ora più comodo tenere così
 
-            backGroundImage = imageForm.createImageForm(@"C:\Users\andre\Documents\asset vari\spruz501.png");
+            //backGroundImage = imageForm.createImageForm(@"C:\Users\andre\Documents\asset vari\sfondo_GUI_png_501.png");
+            
+            //inutile
+            double[] tetststst = GlobalVariables.normalizationFactor;
+
+            dataset = normalizeDataset(dataset, GlobalVariables.normalizationFactor);
+
+            NN nn = new NN();
+            nn.initializeNetwork();
+            
+            nn.inputLayer.addNode((int)GlobalVariables.nnNodeType.Input);
+                
+             
 
             //drawSomething(backGroundImage);
             int stop = 0;
@@ -86,9 +100,9 @@ namespace Classification_GUI
                         do
                         {
                             string[] buffer = fileContent[index].Split(';');
-                            if (buffer.Length > GlobalVariables.datasetFeatures)
+                            if (buffer.Length-1 > GlobalVariables.inputFeatures)
                             { 
-                                GlobalVariables.datasetFeatures = buffer.Length;
+                                GlobalVariables.inputFeatures = buffer.Length-1;
                                 //se becco una riga più lunga e non parto da zero vuol dire che ho trovato una riga classificata dopo averne lette tot da classificare
                                 if (index != 0)
                                 {
@@ -96,7 +110,7 @@ namespace Classification_GUI
                                 }
                             }
                             //qua esco sicuro perchè ho beccato una riga con meno valori (senza etichetta)
-                            else if (buffer.Length < GlobalVariables.datasetFeatures)
+                            else if (buffer.Length-1 < GlobalVariables.inputFeatures)
                             {
                                 exit = false;
                             }
@@ -104,25 +118,26 @@ namespace Classification_GUI
                         }
                         while (exit);
 
+                        //metto effettivamente i dati nella struttura dataset
                         foreach (var line in fileContent)
                         {
                             string[] buffer = line.Split(';');
                             ClassifiedDatapoint cdp = new ClassifiedDatapoint();
                             UnclassifiedDatapoint ucdp = new UnclassifiedDatapoint();
                             //è un punto con etichetta
-                            if (buffer.Length == GlobalVariables.datasetFeatures)
+                            if (buffer.Length-1 == GlobalVariables.inputFeatures)
                             {
-                                for (int i = 0; i < GlobalVariables.datasetFeatures-1; i++)
+                                for (int i = 0; i < GlobalVariables.inputFeatures; i++)
                                 {
                                     cdp.attributes.Add(Convert.ToDouble(buffer[i]));
                                 }
-                                cdp.label = Convert.ToInt32(buffer[GlobalVariables.datasetFeatures - 1]);
+                                cdp.label = Convert.ToInt32(buffer[GlobalVariables.inputFeatures]);
                                 dataset.classified_data.Add(cdp);
                             }
                             //altrimenti no
                             else
                             {
-                                for (int i = 0; i < GlobalVariables.datasetFeatures - 1; i++)
+                                for (int i = 0; i < GlobalVariables.inputFeatures; i++)
                                 {
                                     ucdp.attributes.Add(Convert.ToDouble(buffer[i]));
                                 }
@@ -151,6 +166,44 @@ namespace Classification_GUI
             return dataset;
         }
 
+        //può essere portata dentro la funzione di lettura file che crea il dataset
+        void extractNormalizationFactors(Dataset dataset)
+        {
+            double[] maxVal = new double[GlobalVariables.inputFeatures];
+            
+
+            for (int feat = 0; feat < GlobalVariables.inputFeatures; feat++)
+            {
+
+                foreach (var point in dataset.classified_data)
+                {
+                    double value = Math.Abs(point.attributes[feat]);
+                    if (value > maxVal[feat])
+                    {
+                        maxVal[feat] = value;
+                    }
+                }
+            }
+            GlobalVariables.normalizationFactor = maxVal;
+        }
+        Dataset normalizeDataset(Dataset dataset, double[] normFactors)
+        {
+            for (int point = 0;point<dataset.classified_data.Count();point++)
+            {
+                for (int index = 0; index < GlobalVariables.inputFeatures; index++)
+                {
+                    dataset.classified_data[point].attributes[index] = dataset.classified_data[point].attributes[index] / normFactors[index];
+                }
+            }
+            for (int point = 0; point < dataset.unclassified_data.Count(); point++)
+            {
+                for (int index = 0; index < GlobalVariables.inputFeatures; index++)
+                {
+                    dataset.unclassified_data[point].attributes[index] = dataset.unclassified_data[point].attributes[index] / normFactors[index];
+                }
+            }
+            return dataset;
+        }
 
         void drawSomething(Image i)
         {

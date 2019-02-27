@@ -38,14 +38,7 @@ namespace Classification_GUI
             get { return datasetFilePath; }
             set { datasetFilePath = value; }
         }
-        //numero di features del dataset, >=2 se =2 rappresentabile
-        public static int datasetFeatures = 0;
-        public static int DatasetFeatures
-        {
-            get { return datasetFeatures; }
-            set { datasetFeatures = value; }
-        }
-
+        
         #region classifiers parameters
 
         //TODO: enum per le etichette? in mdoo che se volessi cambiarle globalmente per qualche motivo le cambio qua invece di assegnarle puntualmente in tutte le assegnazioni
@@ -85,11 +78,58 @@ namespace Classification_GUI
             get { return kValue; }
             set { kValue = value; }
         }
-            //NN
+        //NN
 
-            //pseudoSVN
-
-
-            #endregion classifiers parameters
+        //test=7
+        public static int inputFeatures=1;
+        public static int InputFeatures
+        {
+            get { return inputFeatures; }
+            set { inputFeatures = value; }
         }
+        //test=5
+        public static int classesNumber=5;
+        public static int ClassesNumber
+        {
+            get { return classesNumber; }
+            set { classesNumber = value; }
+        }
+        //test = 20
+        public static int numberOfHiddenNodes=20;
+        public static int NumberOfHiddenNodes
+        {
+            get { return numberOfHiddenNodes; }
+            set { numberOfHiddenNodes = value; }
+        }
+        //test = 3
+        public static int numberOfHiddenLayers = 3;
+        public static int NumberOfHiddenLayers
+        {
+            get { return numberOfHiddenLayers; }
+            set { numberOfHiddenLayers = value; }
+        }
+        public enum nnNodeType
+        {
+            Input=1,
+            Hidden=2,
+            Output=3
+        }
+
+        public static bool ultimoLayerHidden = false;
+        public static bool UltimoLayerHidden
+        {
+            get { return ultimoLayerHidden; }
+            set { ultimoLayerHidden = value; }
+        }
+        //pseudoSVN
+
+        //fattore di normalizzazione per i dati, immagino di usare lo stesso per tutte le dimensioni
+        public static double[] normalizationFactor;
+        public static double[] NormalizationFactor
+        {
+            get { return normalizationFactor; }
+            set { normalizationFactor = value; }
+        }
+        #endregion classifiers parameters
     }
+}
